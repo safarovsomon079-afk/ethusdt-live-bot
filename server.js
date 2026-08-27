@@ -9,9 +9,9 @@ app.get('/health', (_req, res) => {
 });
 
 app.get('/', (_req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'index-live.html'));
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log('ETHUSDT monitor running on port', PORT);
+  console.log('ETHUSDT LIVE monitor running on port', PORT);
 });
