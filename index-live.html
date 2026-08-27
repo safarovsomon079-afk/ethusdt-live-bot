@@ -44,7 +44,7 @@
 const $=id=>document.getElementById(id);
 const RESTS=['https://fapi.binance.com','https://fapi1.binance.com','https://fapi2.binance.com'];
 const STREAMS=['ethusdt@aggTrade','ethusdt@ticker','ethusdt@kline_5m','ethusdt@kline_15m','ethusdt@kline_30m','ethusdt@kline_1h','ethusdt@kline_4h','ethusdt@kline_1d'];
-const WS='wss://fstream.binance.com:9443ure.com/stream?streams='+STREAMS.join('/');
+const WS=(location.protocol==='https:'?'wss://':'ws://')+location.host+'/ws';
 const TFMS={"5m":300000,"15m":900000,"30m":1800000,"1h":3600000,"4h":14400000,"1d":86400000};
 let active='5m',socket,reconnectTimer,lastPrice=0,lastTradePrice=0,currentCandle=null,receivedTrade=false;
 const chart=LightweightCharts.createChart($('chart'),{autoSize:true,layout:{background:{type:LightweightCharts.ColorType.Solid,color:'#0a101b'},textColor:'#8796aa'},grid:{vertLines:{color:'#142033'},horzLines:{color:'#142033'}},rightPriceScale:{borderColor:'#26354a'},timeScale:{borderColor:'#26354a',timeVisible:true,secondsVisible:false,rightOffset:8,shiftVisibleRangeOnNewBar:true}});
