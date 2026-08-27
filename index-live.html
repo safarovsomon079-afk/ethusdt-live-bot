@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ETHUSDT Futures LIVE</title>
+<script src="https://unpkg.com/lightweight-charts@5.2.1/dist/lightweight-charts.standalone.production.js"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#060a13;color:#e8eef8;font-family:Arial,sans-serif}.app{max-width:1500px;margin:auto;padding:16px}.top{display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap}h1{margin:0}.badge{color:#f0b90b}.muted{color:#77869b;font-size:12px}.live{color:#22c55e}.wait{color:#f59e0b}.bad{color:#ef4444}.price{font-size:34px;font-weight:800}.pos,.buy{color:#22c55e}.neg,.sell{color:#ef4444}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}.card,.liq-card{background:#0d1421;border:1px solid #1e2a3e;border-radius:12px;padding:12px}.card span,.liq-card span{display:block;color:#77869b;font-size:11px}.card b,.liq-card b{display:block;margin-top:5px}.panel,.section{background:#0a101b;border:1px solid #1e2a3e;border-radius:14px;overflow:hidden}.bar,.section-head{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:11px 12px;border-bottom:1px solid #172235;flex-wrap:wrap}.btns{display:flex;gap:6px;flex-wrap:wrap}.btn{background:#101b2c;color:#aab7c9;border:1px solid #26364e;border-radius:8px;padding:8px 10px;cursor:pointer}.btn.active{background:#f0b90b;color:#07111f;border-color:#f0b90b;font-weight:800}.ohlc{display:flex;gap:10px;flex-wrap:wrap;color:#77869b;font-size:12px}.ohlc b{color:#d7e0ec}.live-tape{display:flex;gap:8px;align-items:center;font-size:12px}.pulse{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 12px #22c55e}#chart{height:66vh;min-height:450px}.footer{padding:8px 10px;color:#6f7d90;font-size:11px;border-top:1px solid #172235;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.error{display:none;padding:10px 12px;background:#261118;color:#fca5a5;font-size:12px}.section{margin-top:14px}.section-head h2{margin:0;font-size:17px}.liq-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding:12px}.imbalance-wrap{padding:0 12px 12px}.imbalance-bar{height:12px;border-radius:999px;overflow:hidden;background:#261317;display:flex}.imbalance-buy{height:100%;background:#22c55e}.imbalance-sell{height:100%;background:#ef4444}.imbalance-labels{display:flex;justify-content:space-between;gap:10px;margin-top:6px;font-size:11px;color:#7f8da4}.walls{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 12px 12px}.wall-box{background:#0d1421;border:1px solid #1e2a3e;border-radius:12px;overflow:hidden}.wall-title{padding:10px 12px;font-weight:800;border-bottom:1px solid #172235}.wall-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:8px 12px;border-bottom:1px solid #151f30;font-size:12px}.wall-row:last-child{border-bottom:0}.note{padding:0 12px 12px;color:#66758a;font-size:11px;line-height:1.45}.flash-up{animation:up .28s}.flash-down{animation:down .28s}@keyframes up{0%{color:#22c55e;transform:scale(1.025)}100%{transform:scale(1)}}@keyframes down{0%{color:#ef4444;transform:scale(1.025)}100%{transform:scale(1)}}@media(max-width:1000px){.liq-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:700px){.app{padding:8px}.stats{grid-template-columns:1fr 1fr}.liq-grid{grid-template-columns:1fr 1fr}.walls{grid-template-columns:1fr}#chart{height:64vh;min-height:500px}}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="top">
+  <div><h1>ETHUSDT <span class="badge">Futures</span></h1><div class="muted">Binance USDⓈ-M · <span id="status" class="wait">Подключение...</span></div></div>
+  <div><div class="muted">Текущая цена · реальные сделки</div><div id="price" class="price">—</div><div id="change">—</div></div>
+</div>
+<div class="stats">
+  <div class="card"><span>24ч максимум</span><b id="high">—</b></div>
+  <div class="card"><span>24ч минимум</span><b id="low">—</b></div>
+  <div class="card"><span>Объём 24ч</span><b id="vol">—</b></div>
+  <div class="card"><span>Таймфрейм</span><b id="tf">5m</b></div>
+</div>
+<div class="panel">
+  <div class="bar">
+    <div class="btns"><button class="btn active" data-tf="5m">5m</button><button class="btn" data-tf="15m">15m</button><button class="btn" data-tf="30m">30m</button><button class="btn" data-tf="1h">1h</button><button class="btn" data-tf="4h">4h</button><button class="btn" data-tf="1d">1d</button></div>
+    <div class="live-tape"><span class="pulse"></span><span id="tradeState">ожидаю сделку Binance…</span></div>
+    <div class="ohlc"><span>O <b id="o">—</b></span><span>H <b id="h">—</b></span><span>L <b id="l">—</b></span><span>C <b id="c">—</b></span></div>
+  </div>
+  <div id="error" class="error"></div><div id="chart"></div>
+  <div class="footer"><span>LIVE: Binance Futures aggTrade + kline</span><span id="updated">Последняя сделка: —</span></div>
+</div>
+<div class="section">
+  <div class="section-head"><div><h2>Ликвидность ETHUSDT</h2><div class="muted">Order Book Binance Futures</div></div><div class="muted">Спред: <b id="spread">—</b></div></div>
+  <div class="liq-grid">
+    <div class="liq-card"><span>BUY ±0,5%</span><b id="bid05" class="buy">—</b></div><div class="liq-card"><span>SELL ±0,5%</span><b id="ask05" class="sell">—</b></div><div class="liq-card"><span>BUY ±1%</span><b id="bid1" class="buy">—</b></div><div class="liq-card"><span>SELL ±1%</span><b id="ask1" class="sell">—</b></div><div class="liq-card"><span>BUY доля</span><b id="buyShare" class="buy">—</b></div><div class="liq-card"><span>SELL доля</span><b id="sellShare" class="sell">—</b></div>
+  </div>
+  <div class="imbalance-wrap"><div class="imbalance-bar"><div id="buyBar" class="imbalance-buy" style="width:50%"></div><div id="sellBar" class="imbalance-sell" style="width:50%"></div></div><div class="imbalance-labels"><span>Покупатели</span><span id="liqUpdated">Ликвидность: —</span><span>Продавцы</span></div></div>
+  <div class="walls"><div class="wall-box"><div class="wall-title buy">Крупные BUY стены</div><div id="bidWalls"></div></div><div class="wall-box"><div class="wall-title sell">Крупные SELL стены</div><div id="askWalls"></div></div></div>
+  <div class="note">Ликвидность = видимые лимитные заявки в стакане. Стены могут быть сняты в любой момент.</div>
+</div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const RESTS=['https://fapi.binance.com','https://fapi1.binance.com','https://fapi2.binance.com'];
+const STREAMS=['ethusdt@aggTrade','ethusdt@ticker','ethusdt@kline_5m','ethusdt@kline_15m','ethusdt@kline_30m','ethusdt@kline_1h','ethusdt@kline_4h','ethusdt@kline_1d'];
+const WS='wss://fstream.binance.com/stream?streams='+STREAMS.join('/');
+const TFMS={"5m":300000,"15m":900000,"30m":1800000,"1h":3600000,"4h":14400000,"1d":86400000};
+let active='5m',socket,reconnectTimer,lastPrice=0,lastTradePrice=0,currentCandle=null,receivedTrade=false;
+const chart=LightweightCharts.createChart($('chart'),{autoSize:true,layout:{background:{type:LightweightCharts.ColorType.Solid,color:'#0a101b'},textColor:'#8796aa'},grid:{vertLines:{color:'#142033'},horzLines:{color:'#142033'}},rightPriceScale:{borderColor:'#26354a'},timeScale:{borderColor:'#26354a',timeVisible:true,secondsVisible:false,rightOffset:8,shiftVisibleRangeOnNewBar:true}});
+const candles=chart.addSeries(LightweightCharts.CandlestickSeries,{upColor:'#22c55e',downColor:'#ef4444',borderUpColor:'#22c55e',borderDownColor:'#ef4444',wickUpColor:'#22c55e',wickDownColor:'#ef4444',priceFormat:{type:'price',precision:2,minMove:.01},priceLineVisible:true,lastValueVisible:true});
+const volumes=chart.addSeries(LightweightCharts.HistogramSeries,{priceScaleId:'volume',priceFormat:{type:'volume'},lastValueVisible:false,priceLineVisible:false});
+chart.priceScale('volume').applyOptions({scaleMargins:{top:.82,bottom:0},borderVisible:false});
+function fmt(v){const n=Number(v);return Number.isFinite(n)?n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):'—'}
+function compact(v){const n=Number(v);return Number.isFinite(n)?new Intl.NumberFormat('en-US',{notation:'compact',maximumFractionDigits:2}).format(n):'—'}
+function money(v){const n=Number(v);return Number.isFinite(n)?'$'+new Intl.NumberFormat('en-US',{notation:'compact',maximumFractionDigits:2}).format(n):'—'}
+function vc(o,c){return +c>=+o?'rgba(34,197,94,.42)':'rgba(239,68,68,.42)'}
+function status(text,cls){$('status').textContent=text;$('status').className=cls}
+function error(text){$('error').textContent=text;$('error').style.display=text?'block':'none'}
+function ohlc(c){$('o').textContent=fmt(c.open??c.o);$('h').textContent=fmt(c.high??c.h);$('l').textContent=fmt(c.low??c.l);$('c').textContent=fmt(c.close??c.c)}
+function setPrice(p){p=+p;if(!Number.isFinite(p))return;const old=lastTradePrice;lastTradePrice=p;lastPrice=p;$('price').textContent=fmt(p);$('price').classList.remove('flash-up','flash-down');void $('price').offsetWidth;if(old&&p>old)$('price').classList.add('flash-up');if(old&&p<old)$('price').classList.add('flash-down')}
+async function api(path){let err;for(const base of RESTS){try{const r=await fetch(base+path,{cache:'no-store'});if(r.ok)return r;err=new Error('HTTP '+r.status)}catch(e){err=e}}throw err||new Error('Binance API')}
+async function history(tf){try{error('');const r=await api('/fapi/v1/klines?symbol=ETHUSDT&interval='+tf+'&limit=500');const a=await r.json();if(!Array.isArray(a))throw 0;const cs=a.map(k=>({time:Math.floor(k[0]/1000),open:+k[1],high:+k[2],low:+k[3],close:+k[4]}));const vs=a.map(k=>({time:Math.floor(k[0]/1000),value:+k[5],color:vc(k[1],k[4])}));candles.setData(cs);volumes.setData(vs);currentCandle=cs.at(-1)||null;if(currentCandle){setPrice(currentCandle.close);ohlc(currentCandle)}chart.timeScale().fitContent();setTimeout(()=>chart.timeScale().scrollToRealTime(),100)}catch(e){error('Не удалось загрузить историю Binance')}}
+async function snapshot(){try{const r=await api('/fapi/v1/ticker/24hr?symbol=ETHUSDT');const d=await r.json();const ch=+d.priceChangePercent;$('high').textContent=fmt(d.highPrice);$('low').textContent=fmt(d.lowPrice);$('vol').textContent=compact(d.quoteVolume)+' USDT';if(Number.isFinite(ch)){$('change').textContent=(ch>0?'+':'')+ch.toFixed(2)+'%';$('change').className=ch>=0?'pos':'neg'}}catch(e){}}
+function tradeToCandle(price,timeMs){const start=Math.floor(timeMs/TFMS[active])*TFMS[active]/1000;if(!currentCandle||currentCandle.time!==start){currentCandle={time:start,open:price,high:price,low:price,close:price}}else{currentCandle={...currentCandle,high:Math.max(currentCandle.high,price),low:Math.min(currentCandle.low,price),close:price}}candles.update(currentCandle);ohlc(currentCandle);chart.timeScale().scrollToRealTime()}
+function handleTrade(d){const p=+d.p,t=+d.T;if(!Number.isFinite(p)||!Number.isFinite(t))return;receivedTrade=true;status('LIVE','live');setPrice(p);tradeToCandle(p,t);$('tradeState').textContent='сделка '+fmt(p)+' · '+new Date(t).toLocaleTimeString('ru-RU');$('updated').textContent='Последняя сделка: '+new Date(t).toLocaleTimeString('ru-RU')}
+function handleKline(k){if(k.i!==active)return;const c={time:Math.floor(k.t/1000),open:+k.o,high:+k.h,low:+k.l,close:+k.c};currentCandle=c;candles.update(c);volumes.update({time:c.time,value:+k.v,color:vc(k.o,k.c)});ohlc(c)}
+function handleTicker(d){const ch=+d.P;$('high').textContent=fmt(d.h);$('low').textContent=fmt(d.l);$('vol').textContent=compact(d.q)+' USDT';if(Number.isFinite(ch)){$('change').textContent=(ch>0?'+':'')+ch.toFixed(2)+'%';$('change').className=ch>=0?'pos':'neg'}}
+function connect(){clearTimeout(reconnectTimer);if(socket)try{socket.close()}catch(e){}status('Подключение...','wait');socket=new WebSocket(WS);socket.onopen=()=>status('Соединение с Binance…','wait');socket.onmessage=e=>{try{const m=JSON.parse(e.data),s=m.stream,d=m.data;if(s.endsWith('@aggTrade'))handleTrade(d);else if(s.endsWith('@ticker'))handleTicker(d);else if(s.includes('@kline_')&&d.k)handleKline(d.k)}catch(err){}};socket.onerror=()=>status('Ошибка Binance','bad');socket.onclose=()=>{status('Переподключение...','wait');reconnectTimer=setTimeout(connect,1200)}}
+function sumWithin(levels,mid,pct,bid){const edge=bid?mid*(1-pct):mid*(1+pct);return levels.reduce((s,r)=>{const p=+r[0],q=+r[1],ok=bid?p>=edge:p<=edge;return ok?s+p*q:s},0)}
+function walls(levels,mid,bid){const edge=bid?mid*.99:mid*1.01;return levels.filter(r=>bid?+r[0]>=edge:+r[0]<=edge).map(r=>({p:+r[0],n:+r[0]*+r[1],d:Math.abs((+r[0]-mid)/mid*100)})).sort((a,b)=>b.n-a.n).slice(0,5)}
+function render(id,a,side){$(id).innerHTML=a.map((w,i)=>'<div class="wall-row"><span>#'+(i+1)+' <b class="'+side+'">'+fmt(w.p)+'</b></span><span>'+money(w.n)+'</span><span>'+w.d.toFixed(2)+'%</span></div>').join('')||'<div class="wall-row"><span>—</span><span>—</span><span>—</span></div>'}
+async function liquidity(){try{const r=await api('/fapi/v1/depth?symbol=ETHUSDT&limit=1000');const d=await r.json(),bb=+d.bids[0][0],ba=+d.asks[0][0],mid=(bb+ba)/2,b05=sumWithin(d.bids,mid,.005,true),a05=sumWithin(d.asks,mid,.005,false),b1=sumWithin(d.bids,mid,.01,true),a1=sumWithin(d.asks,mid,.01,false),tot=b1+a1,bp=tot?b1/tot*100:50,ap=100-bp;$('bid05').textContent=money(b05);$('ask05').textContent=money(a05);$('bid1').textContent=money(b1);$('ask1').textContent=money(a1);$('buyShare').textContent=bp.toFixed(1)+'%';$('sellShare').textContent=ap.toFixed(1)+'%';$('buyBar').style.width=bp+'%';$('sellBar').style.width=ap+'%';$('spread').textContent=fmt(ba-bb)+' USDT';render('bidWalls',walls(d.bids,mid,true),'buy');render('askWalls',walls(d.asks,mid,false),'sell');$('liqUpdated').textContent='Ликвидность: '+new Date().toLocaleTimeString('ru-RU')}catch(e){$('liqUpdated').textContent='Ликвидность: ошибка'}}
+document.querySelectorAll('.btn').forEach(b=>b.onclick=()=>{active=b.dataset.tf;$('tf').textContent=active;document.querySelectorAll('.btn').forEach(x=>x.classList.toggle('active',x===b));history(active)});
+history(active);snapshot();liquidity();connect();setInterval(liquidity,5000);setTimeout(()=>{if(!receivedTrade)status('Нет сделок Binance','bad')},8000);
+</script>
+</body>
+</html>
